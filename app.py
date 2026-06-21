@@ -13,7 +13,7 @@ import uuid
 
 import boto3
 from botocore.client import Config
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, url_for
 
 # --- Configuration -----------------------------------------------------------
 
@@ -34,6 +34,7 @@ MAX_CONTENT_LENGTH = 8 * 1024 * 1024  # 8 MB
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 
 # --- Spaces client -----------------------------------------------------------
@@ -97,13 +98,19 @@ def index():
 @app.route("/upload", methods=["POST"])
 def upload():
     if not is_configured():
+        flash("Spaces is not configured yet.")
         return redirect(url_for("index"))
 
     file = request.files.get("image")
     if not file or file.filename == "":
+        flash("Please select an image to upload.")
         return redirect(url_for("index"))
 
     if not allowed_file(file.filename):
+        flash(
+            "Invalid file type. Allowed types: png, jpg, jpeg, gif, webp. "
+            "Maximum size: 8 MB."
+        )
         return redirect(url_for("index"))
 
     ext = file.filename.rsplit(".", 1)[1].lower()
@@ -116,6 +123,15 @@ def upload():
         Body=file,
         ACL="public-read",
         ContentType=file.mimetype,
+    )
+    return redirect(url_for("index"))
+
+
+@app.errorhandler(413)
+def file_too_large(error):
+    flash(
+        "File too large. Maximum allowed size is 8 MB. "
+        "Allowed types: png, jpg, jpeg, gif, webp."
     )
     return redirect(url_for("index"))
 
