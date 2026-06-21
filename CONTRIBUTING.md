@@ -7,9 +7,16 @@ any size are welcome — fixing a typo counts.
 
 1. Fork and clone the repo.
 2. Set up the app locally (see the [README](README.md#run-it-locally)).
-3. Create a branch: `git checkout -b my-change`.
-4. Make your change and test it locally.
-5. Open a pull request describing what and why.
+3. Enable the pre-commit hooks (one-time):
+   ```bash
+   pip install pre-commit
+   pre-commit install
+   ```
+   They run automatically on each commit; run them against everything with
+   `pre-commit run --all-files`. CI runs the same checks, so this keeps you green.
+4. Create a branch: `git checkout -b my-change`.
+5. Make your change and test it locally.
+6. Open a pull request describing what and why.
 
 ## Guidelines
 
