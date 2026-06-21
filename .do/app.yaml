@@ -1,0 +1,34 @@
+# DigitalOcean App Platform spec.
+# Docs: https://docs.digitalocean.com/products/app-platform/reference/app-spec/
+#
+# Update `repo` to your fork, then either point App Platform at this file or
+# import it under Settings → App Spec.
+
+name: spaces-gallery
+region: nyc
+services:
+  - name: web
+    github:
+      repo: harborlabs/spaces-gallery
+      branch: main
+      deploy_on_push: true
+    environment_slug: python
+    run_command: gunicorn --worker-tmp-dir /dev/shm --bind 0.0.0.0:$PORT app:app
+    instance_size_slug: basic-xxs
+    instance_count: 1
+    http_port: 8080
+    health_check:
+      http_path: /health
+    envs:
+      - key: SPACES_KEY
+        scope: RUN_TIME
+        type: SECRET
+      - key: SPACES_SECRET
+        scope: RUN_TIME
+        type: SECRET
+      - key: SPACES_REGION
+        scope: RUN_TIME
+        value: nyc3
+      - key: SPACES_BUCKET
+        scope: RUN_TIME
+        value: your-bucket-name

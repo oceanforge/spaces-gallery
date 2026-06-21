@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spaces Gallery</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <header>
+    <h1>🌊 Spaces Gallery</h1>
+    <p>Upload an image — it's stored in DigitalOcean Spaces and served below.</p>
+  </header>
+
+  <main>
+    {% if error %}
+      <div class="notice">{{ error }}</div>
+    {% endif %}
+
+    <form class="uploader" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/*" required />
+      <button type="submit">Upload</button>
+    </form>
+
+    {% if images %}
+      <section class="gallery">
+        {% for url in images %}
+          <a href="{{ url }}" target="_blank" rel="noopener">
+            <img src="{{ url }}" alt="Uploaded image" loading="lazy" />
+          </a>
+        {% endfor %}
+      </section>
+    {% elif not error %}
+      <p class="empty">No images yet. Upload the first one!</p>
+    {% endif %}
+  </main>
+
+  <footer>
+    <p>Deployed on DigitalOcean App Platform · <a href="https://github.com/harborlabs/spaces-gallery">Source on GitHub</a></p>
+  </footer>
+</body>
+</html>
