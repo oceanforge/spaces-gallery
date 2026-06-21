@@ -45,6 +45,22 @@
           </figure>
         {% endfor %}
       </section>
+
+      {% if pagination.total_pages > 1 %}
+        <nav class="pager">
+          {% if pagination.page > 1 %}
+            <a href="{{ url_for('index', page=pagination.page - 1) }}">← Newer</a>
+          {% else %}
+            <span class="disabled">← Newer</span>
+          {% endif %}
+          <span class="pager-status">Page {{ pagination.page }} of {{ pagination.total_pages }}</span>
+          {% if pagination.page < pagination.total_pages %}
+            <a href="{{ url_for('index', page=pagination.page + 1) }}">Older →</a>
+          {% else %}
+            <span class="disabled">Older →</span>
+          {% endif %}
+        </nav>
+      {% endif %}
     {% elif not error %}
       <p class="empty">No images yet. Upload the first one!</p>
     {% endif %}

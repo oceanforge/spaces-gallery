@@ -116,6 +116,22 @@ button:hover { filter: brightness(1.05); }
 
 .empty { text-align: center; color: var(--muted); margin: 2rem 0; }
 
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.pager a {
+  color: var(--do-blue);
+  text-decoration: none;
+  font-weight: 600;
+}
+.pager a:hover { text-decoration: underline; }
+.pager .disabled { color: var(--border); }
+.pager-status { color: var(--muted); font-size: .9rem; }
+
 footer {
   text-align: center;
   color: var(--muted);
