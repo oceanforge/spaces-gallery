@@ -7,6 +7,8 @@ A tiny image-upload gallery that stores files in **DigitalOcean Spaces** and run
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
+![Spaces Gallery screenshot](docs/screenshot.png)
+
 ## What it does
 
 - Upload an image through a simple web form.
