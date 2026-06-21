@@ -84,6 +84,13 @@ Prefer config-as-code? An app spec is included at [`.do/app.yaml`](.do/app.yaml)
 
 Issues and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Good first issues are labeled [`good first issue`](https://github.com/oceanforge/spaces-gallery/labels/good%20first%20issue).
 
+This repo uses [pre-commit](https://pre-commit.com/) to run lint and formatting checks before each commit (the same checks CI enforces). Enable them once after cloning:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
 ## License
 
 [MIT](LICENSE)
