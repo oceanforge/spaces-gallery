@@ -35,7 +35,7 @@
         {% for image in images %}
           <figure class="gallery-item">
             <a href="{{ image.url }}" target="_blank" rel="noopener">
-              <img src="{{ image.url }}" alt="Uploaded image" loading="lazy" />
+              <img src="{{ image.thumb_url }}" alt="Uploaded image" loading="lazy" />
             </a>
             <form class="delete-form" action="{{ url_for('delete') }}" method="post"
                   onsubmit="return confirm('Delete this image?');">
