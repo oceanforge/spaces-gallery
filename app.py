@@ -140,7 +140,11 @@ def index():
         except Exception as exc:  # noqa: BLE001 — surface any config/storage error
             error = f"Could not list images: {exc}"
     return render_template(
-        "index.html", images=images, error=error, pagination=pagination
+        "index.html",
+        images=images,
+        error=error,
+        pagination=pagination,
+        total_images=pagination["total"]
     )
 
 

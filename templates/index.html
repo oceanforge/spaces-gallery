@@ -9,7 +9,7 @@
 <body>
   <header>
     <h1>🌊 Spaces Gallery</h1>
-    <p>Upload an image — it's stored in DigitalOcean Spaces and served below.</p>
+    <p>{{ pagination.total }} image{{ 's' if pagination.total != 1 else '' }} stored in DigitalOcean Spaces.</p>
   </header>
 
   <main>
