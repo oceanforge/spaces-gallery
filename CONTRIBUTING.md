@@ -19,4 +19,4 @@ any size are welcome — fixing a typo counts.
 
 ## Good first issues
 
-Look for issues labeled [`good first issue`](https://github.com/harborlabs/spaces-gallery/labels/good%20first%20issue).
+Look for issues labeled [`good first issue`](https://github.com/oceanforge/spaces-gallery/labels/good%20first%20issue).

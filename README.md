@@ -2,7 +2,7 @@
 
 A tiny image-upload gallery that stores files in **DigitalOcean Spaces** and runs on **DigitalOcean App Platform** — built to show how little it takes to ship a real app (web service + object storage) with no servers to manage and no Dockerfile to write.
 
-> Part of [**harborlabs**](https://github.com/harborlabs) — small, deploy-it-yourself showcase apps for the DigitalOcean cloud.
+> Part of [**oceanforge**](https://github.com/oceanforge) — small, deploy-it-yourself showcase apps for the DigitalOcean cloud.
 
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
@@ -25,7 +25,7 @@ That's it — the point is the **deployment story**, not the feature list.
 ## Run it locally
 
 ```bash
-git clone https://github.com/harborlabs/spaces-gallery.git
+git clone https://github.com/oceanforge/spaces-gallery.git
 cd spaces-gallery
 
 python -m venv venv && source venv/bin/activate
@@ -80,7 +80,7 @@ Prefer config-as-code? An app spec is included at [`.do/app.yaml`](.do/app.yaml)
 
 ## Contributing
 
-Issues and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Good first issues are labeled [`good first issue`](https://github.com/harborlabs/spaces-gallery/labels/good%20first%20issue).
+Issues and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Good first issues are labeled [`good first issue`](https://github.com/oceanforge/spaces-gallery/labels/good%20first%20issue).
 
 ## License
 

@@ -15,5 +15,5 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Local development workflow via `.env` and `python app.py`.
 - CI workflow (lint) and release workflow (GitHub Releases on tags).
 
-[Unreleased]: https://github.com/harborlabs/spaces-gallery/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/harborlabs/spaces-gallery/releases/tag/v0.1.0
+[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/oceanforge/spaces-gallery/releases/tag/v0.1.0

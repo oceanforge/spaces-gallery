@@ -9,7 +9,7 @@ region: nyc
 services:
   - name: web
     github:
-      repo: harborlabs/spaces-gallery
+      repo: oceanforge/spaces-gallery
       branch: main
       deploy_on_push: true
     environment_slug: python
