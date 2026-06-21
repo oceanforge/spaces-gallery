@@ -34,6 +34,8 @@ MAX_CONTENT_LENGTH = 8 * 1024 * 1024  # 8 MB
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
+# Used to sign the session for flash messages. The fallback is for local dev only;
+# set SECRET_KEY to a strong random value in production.
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 

@@ -4,6 +4,8 @@ A tiny image-upload gallery that stores files in **DigitalOcean Spaces** and run
 
 > Part of [**oceanforge**](https://github.com/oceanforge) — small, deploy-it-yourself showcase apps for the DigitalOcean cloud.
 
+📖 **Want the story behind it?** There's a full write-up in [`docs/blog-post.md`](docs/blog-post.md) — why this stack, how it's built, and the one config gotcha to avoid.
+
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
@@ -78,6 +80,7 @@ Prefer config-as-code? An app spec is included at [`.do/app.yaml`](.do/app.yaml)
 | `SPACES_REGION` | | `nyc3` | Spaces region |
 | `SPACES_ENDPOINT` | | `https://<region>.digitaloceanspaces.com` | Origin endpoint |
 | `SPACES_CDN_ENDPOINT` | | — | Optional CDN endpoint for faster delivery |
+| `SECRET_KEY` | | `dev-secret-key` | Flask session secret for flash messages; set a strong value in production |
 | `PORT` | | `8080` | Port the app listens on |
 
 ## Contributing
