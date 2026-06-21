@@ -6,6 +6,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-06-21
+
+### Added
+- Delete control on each gallery item that removes the object from Spaces ([#2]).
+- Validation feedback (flash messages) for rejected uploads — wrong type, no file,
+  not configured, and files over the 8 MB limit ([#1]).
+
 ## [0.1.0] - 2026-06-21
 
 ### Added
@@ -15,5 +22,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Local development workflow via `.env` and `python app.py`.
 - CI workflow (lint) and release workflow (GitHub Releases on tags).
 
-[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/oceanforge/spaces-gallery/releases/tag/v0.1.0
+[#1]: https://github.com/oceanforge/spaces-gallery/issues/1
+[#2]: https://github.com/oceanforge/spaces-gallery/issues/2

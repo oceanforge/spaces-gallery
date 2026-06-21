@@ -32,10 +32,17 @@
 
     {% if images %}
       <section class="gallery">
-        {% for url in images %}
-          <a href="{{ url }}" target="_blank" rel="noopener">
-            <img src="{{ url }}" alt="Uploaded image" loading="lazy" />
-          </a>
+        {% for image in images %}
+          <figure class="gallery-item">
+            <a href="{{ image.url }}" target="_blank" rel="noopener">
+              <img src="{{ image.url }}" alt="Uploaded image" loading="lazy" />
+            </a>
+            <form class="delete-form" action="{{ url_for('delete') }}" method="post"
+                  onsubmit="return confirm('Delete this image?');">
+              <input type="hidden" name="key" value="{{ image.key }}" />
+              <button type="submit" class="delete-btn" aria-label="Delete image" title="Delete">✕</button>
+            </form>
+          </figure>
         {% endfor %}
       </section>
     {% elif not error %}
