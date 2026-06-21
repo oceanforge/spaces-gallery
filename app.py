@@ -13,7 +13,7 @@ import uuid
 
 import boto3
 from botocore.client import Config
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, flash
 
 # --- Configuration -----------------------------------------------------------
 
@@ -34,7 +34,7 @@ MAX_CONTENT_LENGTH = 8 * 1024 * 1024  # 8 MB
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
-
+app.secret_key = "super-secret-dev-key"
 
 # --- Spaces client -----------------------------------------------------------
 
@@ -104,6 +104,7 @@ def upload():
         return redirect(url_for("index"))
 
     if not allowed_file(file.filename):
+        flash("Upload rejected: Invalid file type. Allowed types are png, jpg, jpeg, gif, webp.", "error")
         return redirect(url_for("index"))
 
     ext = file.filename.rsplit(".", 1)[1].lower()
@@ -128,6 +129,14 @@ def health():
 
 def is_configured():
     return all([SPACES_KEY, SPACES_SECRET, SPACES_BUCKET])
+
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    """Catch file uploads that exceed the 8 MB limit."""
+    flash("Upload rejected: File size exceeds the 8 MB limit.", "error")
+    return redirect(url_for("index"))
+
+
 
 
 if __name__ == "__main__":

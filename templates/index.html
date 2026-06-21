@@ -17,6 +17,15 @@
       <div class="notice">{{ error }}</div>
     {% endif %}
 
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="notice" style="border-color: #ef4444; color: #fca5a5;">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+
     <form class="uploader" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
       <input type="file" name="image" accept="image/*" required />
       <button type="submit">Upload</button>
