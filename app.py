@@ -31,6 +31,7 @@ SPACES_CDN_ENDPOINT = os.environ.get("SPACES_CDN_ENDPOINT")
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 MAX_CONTENT_LENGTH = 8 * 1024 * 1024  # 8 MB
+PAGE_SIZE = 12  # images per gallery page
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
@@ -69,16 +70,28 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def list_images(limit=60):
-    """Return the most recently uploaded images as {key, url} dicts.
+def list_images(page=1, page_size=PAGE_SIZE):
+    """Return one page of images (newest first) plus paging metadata.
 
-    The key is needed so the gallery can offer a delete control for each item.
+    Each image is a {key, url} dict — the key is needed so the gallery can offer
+    a delete control for each item.
     """
     client = get_client()
-    response = client.list_objects_v2(Bucket=SPACES_BUCKET, Prefix="uploads/")
-    objects = response.get("Contents", [])
+    paginator = client.get_paginator("list_objects_v2")
+    objects = []
+    for response in paginator.paginate(Bucket=SPACES_BUCKET, Prefix="uploads/"):
+        objects.extend(response.get("Contents", []))
     objects.sort(key=lambda o: o["LastModified"], reverse=True)
-    return [{"key": o["Key"], "url": public_url(o["Key"])} for o in objects[:limit]]
+
+    total = len(objects)
+    total_pages = max(1, (total + page_size - 1) // page_size)
+    page = max(1, min(page, total_pages))
+    start = (page - 1) * page_size
+    page_objects = objects[start:start + page_size]
+
+    images = [{"key": o["Key"], "url": public_url(o["Key"])} for o in page_objects]
+    pagination = {"page": page, "total_pages": total_pages, "total": total}
+    return images, pagination
 
 
 # --- Routes ------------------------------------------------------------------
@@ -86,6 +99,7 @@ def list_images(limit=60):
 @app.route("/")
 def index():
     images = []
+    pagination = {"page": 1, "total_pages": 1, "total": 0}
     error = None
     if not is_configured():
         error = (
@@ -94,10 +108,13 @@ def index():
         )
     else:
         try:
-            images = list_images()
+            page = request.args.get("page", 1, type=int)
+            images, pagination = list_images(page=page)
         except Exception as exc:  # noqa: BLE001 — surface any config/storage error
             error = f"Could not list images: {exc}"
-    return render_template("index.html", images=images, error=error)
+    return render_template(
+        "index.html", images=images, error=error, pagination=pagination
+    )
 
 
 @app.route("/upload", methods=["POST"])

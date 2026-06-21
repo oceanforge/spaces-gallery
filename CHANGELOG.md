@@ -6,6 +6,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- Gallery pagination with Newer/Older navigation (12 images per page) ([#5]).
+
 ## [0.2.0] - 2026-06-21
 
 ### Added
@@ -37,4 +40,5 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 [0.1.0]: https://github.com/oceanforge/spaces-gallery/releases/tag/v0.1.0
 [#1]: https://github.com/oceanforge/spaces-gallery/issues/1
 [#2]: https://github.com/oceanforge/spaces-gallery/issues/2
+[#5]: https://github.com/oceanforge/spaces-gallery/issues/5
 [#12]: https://github.com/oceanforge/spaces-gallery/issues/12
