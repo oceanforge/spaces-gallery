@@ -68,12 +68,15 @@ def allowed_file(filename):
 
 
 def list_images(limit=60):
-    """Return public URLs for the most recently uploaded images."""
+    """Return the most recently uploaded images as {key, url} dicts.
+
+    The key is needed so the gallery can offer a delete control for each item.
+    """
     client = get_client()
     response = client.list_objects_v2(Bucket=SPACES_BUCKET, Prefix="uploads/")
     objects = response.get("Contents", [])
     objects.sort(key=lambda o: o["LastModified"], reverse=True)
-    return [public_url(o["Key"]) for o in objects[:limit]]
+    return [{"key": o["Key"], "url": public_url(o["Key"])} for o in objects[:limit]]
 
 
 # --- Routes ------------------------------------------------------------------
@@ -124,6 +127,24 @@ def upload():
         ACL="public-read",
         ContentType=file.mimetype,
     )
+    return redirect(url_for("index"))
+
+
+@app.route("/delete", methods=["POST"])
+def delete():
+    if not is_configured():
+        flash("Spaces is not configured yet.")
+        return redirect(url_for("index"))
+
+    key = request.form.get("key", "")
+    # Only allow deleting objects this app created, never an arbitrary key.
+    if not key.startswith("uploads/"):
+        flash("Could not delete that image.")
+        return redirect(url_for("index"))
+
+    client = get_client()
+    client.delete_object(Bucket=SPACES_BUCKET, Key=key)
+    flash("Image deleted.")
     return redirect(url_for("index"))
 
 
