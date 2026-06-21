@@ -8,12 +8,14 @@ a real app (web service + object storage) on DigitalOcean App Platform.
 Configuration is read from environment variables — see .env.example.
 """
 
+import io
 import os
 import uuid
 
 import boto3
 from botocore.client import Config
 from flask import Flask, flash, redirect, render_template, request, url_for
+from PIL import Image
 
 # --- Configuration -----------------------------------------------------------
 
@@ -32,6 +34,7 @@ SPACES_CDN_ENDPOINT = os.environ.get("SPACES_CDN_ENDPOINT")
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 MAX_CONTENT_LENGTH = 8 * 1024 * 1024  # 8 MB
 PAGE_SIZE = 12  # images per gallery page
+THUMBNAIL_SIZE = (400, 400)  # max thumbnail dimensions (aspect preserved)
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
@@ -70,11 +73,23 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def make_thumbnail(data):
+    """Return a downscaled copy of the image bytes, keeping the original format."""
+    image = Image.open(io.BytesIO(data))
+    fmt = image.format or "PNG"
+    image.thumbnail(THUMBNAIL_SIZE)
+    buffer = io.BytesIO()
+    image.save(buffer, format=fmt)
+    buffer.seek(0)
+    return buffer
+
+
 def list_images(page=1, page_size=PAGE_SIZE):
     """Return one page of images (newest first) plus paging metadata.
 
-    Each image is a {key, url} dict — the key is needed so the gallery can offer
-    a delete control for each item.
+    Each image is a {key, url, thumb_url} dict — the key drives the delete
+    control, and thumb_url is the smaller image for the grid (falling back to
+    the full image when no thumbnail exists, e.g. for older uploads).
     """
     client = get_client()
     paginator = client.get_paginator("list_objects_v2")
@@ -83,13 +98,25 @@ def list_images(page=1, page_size=PAGE_SIZE):
         objects.extend(response.get("Contents", []))
     objects.sort(key=lambda o: o["LastModified"], reverse=True)
 
+    # Names that have a generated thumbnail, so we can fall back gracefully.
+    thumb_names = set()
+    for response in paginator.paginate(Bucket=SPACES_BUCKET, Prefix="thumbs/"):
+        for obj in response.get("Contents", []):
+            thumb_names.add(obj["Key"].split("/", 1)[1])
+
     total = len(objects)
     total_pages = max(1, (total + page_size - 1) // page_size)
     page = max(1, min(page, total_pages))
     start = (page - 1) * page_size
     page_objects = objects[start:start + page_size]
 
-    images = [{"key": o["Key"], "url": public_url(o["Key"])} for o in page_objects]
+    images = []
+    for obj in page_objects:
+        key = obj["Key"]
+        name = key.split("/", 1)[1]
+        thumb_url = public_url(f"thumbs/{name}") if name in thumb_names else public_url(key)
+        images.append({"key": key, "url": public_url(key), "thumb_url": thumb_url})
+
     pagination = {"page": page, "total_pages": total_pages, "total": total}
     return images, pagination
 
@@ -136,16 +163,33 @@ def upload():
         return redirect(url_for("index"))
 
     ext = file.filename.rsplit(".", 1)[1].lower()
-    key = f"uploads/{uuid.uuid4().hex}.{ext}"
+    name = f"{uuid.uuid4().hex}.{ext}"
+    key = f"uploads/{name}"
 
+    data = file.read()
     client = get_client()
     client.put_object(
         Bucket=SPACES_BUCKET,
         Key=key,
-        Body=file,
+        Body=data,
         ACL="public-read",
         ContentType=file.mimetype,
     )
+
+    # Generate a thumbnail for the grid. If it fails for any reason, the gallery
+    # falls back to serving the full image, so this never blocks an upload.
+    try:
+        thumb = make_thumbnail(data)
+        client.put_object(
+            Bucket=SPACES_BUCKET,
+            Key=f"thumbs/{name}",
+            Body=thumb,
+            ACL="public-read",
+            ContentType=file.mimetype,
+        )
+    except Exception:  # noqa: BLE001 — thumbnail is best-effort
+        pass
+
     return redirect(url_for("index"))
 
 
@@ -163,6 +207,8 @@ def delete():
 
     client = get_client()
     client.delete_object(Bucket=SPACES_BUCKET, Key=key)
+    # Remove the matching thumbnail too (no error if it doesn't exist).
+    client.delete_object(Bucket=SPACES_BUCKET, Key=f"thumbs/{key.split('/', 1)[1]}")
     flash("Image deleted.")
     return redirect(url_for("index"))
 

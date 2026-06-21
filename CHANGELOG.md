@@ -6,8 +6,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-21
+
 ### Added
 - Gallery pagination with Newer/Older navigation (12 images per page) ([#5]).
+- Thumbnail generation on upload (via Pillow); the grid serves smaller images and
+  falls back to the full image when no thumbnail exists ([#4]).
 
 ## [0.2.0] - 2026-06-21
 
@@ -34,11 +38,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Local development workflow via `.env` and `python app.py`.
 - CI workflow (lint) and release workflow (GitHub Releases on tags).
 
-[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/oceanforge/spaces-gallery/releases/tag/v0.1.0
 [#1]: https://github.com/oceanforge/spaces-gallery/issues/1
 [#2]: https://github.com/oceanforge/spaces-gallery/issues/2
+[#4]: https://github.com/oceanforge/spaces-gallery/issues/4
 [#5]: https://github.com/oceanforge/spaces-gallery/issues/5
 [#12]: https://github.com/oceanforge/spaces-gallery/issues/12
