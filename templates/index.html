@@ -37,6 +37,16 @@
             <a href="{{ image.url }}" target="_blank" rel="noopener">
               <img src="{{ image.thumb_url }}" alt="Uploaded image" loading="lazy" />
             </a>
+
+            <button
+              type="button"
+              class="copy-btn"
+              data-url="{{ image.url }}"
+              aria-label="Copy image URL"
+              title="Copy URL">
+              📋
+            </button>
+
             <form class="delete-form" action="{{ url_for('delete') }}" method="post"
                   onsubmit="return confirm('Delete this image?');">
               <input type="hidden" name="key" value="{{ image.key }}" />
@@ -69,5 +79,25 @@
   <footer>
     <p>Deployed on DigitalOcean App Platform · <a href="https://github.com/oceanforge/spaces-gallery">Source on GitHub</a></p>
   </footer>
+
+  <script>
+    document.querySelectorAll(".copy-btn").forEach((button) => {
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(button.dataset.url);
+
+          const original = button.textContent;
+          button.textContent = "✓";
+
+          setTimeout(() => {
+            button.textContent = original;
+          }, 1000);
+        } catch (err) {
+          console.error("Failed to copy URL:", err);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
+
