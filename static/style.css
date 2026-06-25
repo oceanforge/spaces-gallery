@@ -114,7 +114,29 @@ button:hover { filter: brightness(1.05); }
 .delete-btn:focus { opacity: 1; }
 .delete-btn:hover { background: #d73a4a; }
 
-.empty { text-align: center; color: var(--muted); margin: 2rem 0; }
+.empty {
+  text-align: center;
+  color: var(--muted);
+  margin: 3rem 0;
+  padding: 2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: .5rem;
+}
+
+.empty h2 {
+  margin: 0 0 .5rem;
+  color: var(--ink);
+}
+
+.empty p {
+  margin: 0;
+}
 
 .pager {
   display: flex;

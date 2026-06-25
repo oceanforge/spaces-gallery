@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spaces Gallery</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" type="image/svg+xml"
+      href="{{ url_for('static', filename='favicon.svg') }}">
 </head>
 <body>
   <header>
@@ -62,8 +64,12 @@
         </nav>
       {% endif %}
     {% elif not error %}
-      <p class="empty">No images yet. Upload the first one!</p>
-    {% endif %}
+  <div class="empty">
+    <div class="empty-icon">📸</div>
+    <h2>No images yet</h2>
+    <p>Upload your first image to start building your gallery.</p>
+  </div>
+{% endif %}
   </main>
 
   <footer>
