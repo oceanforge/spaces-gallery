@@ -143,11 +143,7 @@ button:hover { filter: brightness(1.05); }
   background: var(--do-blue);
 }
 
-.empty {
-  text-align: center;
-  color: var(--muted);
-  margin: 2rem 0;
-}
+.empty { text-align: center; color: var(--muted); margin: 2rem 0; }
 
 .pager {
   display: flex;
