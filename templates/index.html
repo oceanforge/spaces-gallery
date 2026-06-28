@@ -9,7 +9,8 @@
 <body>
   <header>
     <h1>🌊 Spaces Gallery</h1>
-    <p>{{ pagination.total }} image{{ 's' if pagination.total != 1 else '' }} stored in DigitalOcean Spaces.</p>
+    <p class="tagline">Upload an image — it's stored in DigitalOcean Spaces…</p>
+    <p class="subtitle"><span style="color: #1E90FF">{{ pagination.total }}</span> image{{ 's' if pagination.total != 1 else '' }} uploaded.</p>
   </header>
 
   <main>

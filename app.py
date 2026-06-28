@@ -144,7 +144,6 @@ def index():
         images=images,
         error=error,
         pagination=pagination,
-        total_images=pagination["total"]
     )
 
 
