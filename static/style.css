@@ -111,8 +111,37 @@ button:hover { filter: brightness(1.05); }
 }
 
 .gallery-item:hover .delete-btn,
-.delete-btn:focus { opacity: 1; }
-.delete-btn:hover { background: #d73a4a; }
+.gallery-item:hover .copy-btn,
+.delete-btn:focus,
+.copy-btn:focus {
+  opacity: 1;
+}
+
+.delete-btn:hover {
+  background: #d73a4a;
+}
+
+.copy-btn {
+  position: absolute;
+  top: .4rem;
+  right: 2.4rem;
+  background: rgba(27, 31, 36, .65);
+  color: #fff;
+  border: 0;
+  border-radius: 999px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-size: .9rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .15s ease, background .15s ease;
+}
+
+.copy-btn:hover {
+  background: var(--do-blue);
+}
 
 .empty {
   text-align: center;
