@@ -95,7 +95,9 @@ button:hover { filter: brightness(1.05); }
   margin: 0;
 }
 
-.delete-btn {
+/* Shared style for the small circular controls on each gallery item
+   (copy, delete). Each control adds its own positioning and hover color. */
+.icon-btn {
   background: rgba(27, 31, 36, .65);
   color: #fff;
   border: 0;
@@ -110,10 +112,8 @@ button:hover { filter: brightness(1.05); }
   transition: opacity .15s ease, background .15s ease;
 }
 
-.gallery-item:hover .delete-btn,
-.gallery-item:hover .copy-btn,
-.delete-btn:focus,
-.copy-btn:focus {
+.gallery-item:hover .icon-btn,
+.icon-btn:focus {
   opacity: 1;
 }
 
@@ -121,22 +121,11 @@ button:hover { filter: brightness(1.05); }
   background: #d73a4a;
 }
 
+/* Sits just left of the delete button in the top-right corner. */
 .copy-btn {
   position: absolute;
   top: .4rem;
   right: 2.4rem;
-  background: rgba(27, 31, 36, .65);
-  color: #fff;
-  border: 0;
-  border-radius: 999px;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  font-size: .9rem;
-  line-height: 1;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity .15s ease, background .15s ease;
 }
 
 .copy-btn:hover {

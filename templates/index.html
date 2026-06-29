@@ -42,7 +42,7 @@
 
             <button
               type="button"
-              class="copy-btn"
+              class="icon-btn copy-btn"
               data-url="{{ image.url }}"
               aria-label="Copy image URL"
               title="Copy URL">
@@ -52,7 +52,7 @@
             <form class="delete-form" action="{{ url_for('delete') }}" method="post"
                   onsubmit="return confirm('Delete this image?');">
               <input type="hidden" name="key" value="{{ image.key }}" />
-              <button type="submit" class="delete-btn" aria-label="Delete image" title="Delete">✕</button>
+              <button type="submit" class="icon-btn delete-btn" aria-label="Delete image" title="Delete">✕</button>
             </form>
           </figure>
         {% endfor %}
