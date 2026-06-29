@@ -6,6 +6,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- Display total image count on the index page using `pagination.total` ([#19]).
+
 ## [0.4.0] - 2026-06-29
 
 ### Added
@@ -59,5 +62,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 [#5]: https://github.com/oceanforge/spaces-gallery/issues/5
 [#12]: https://github.com/oceanforge/spaces-gallery/issues/12
 [#17]: https://github.com/oceanforge/spaces-gallery/issues/17
+[#19]: https://github.com/oceanforge/spaces-gallery/issues/19
 [#22]: https://github.com/oceanforge/spaces-gallery/issues/22
 [#23]: https://github.com/oceanforge/spaces-gallery/issues/23

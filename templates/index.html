@@ -11,7 +11,8 @@
 <body>
   <header>
     <h1>🌊 Spaces Gallery</h1>
-    <p>Upload an image — it's stored in DigitalOcean Spaces and served below.</p>
+    <p class="tagline">Upload an image — it's stored in DigitalOcean Spaces…</p>
+    <p class="subtitle"><span class="count">{{ pagination.total }}</span> image{{ 's' if pagination.total != 1 else '' }} uploaded.</p>
   </header>
 
   <main>
