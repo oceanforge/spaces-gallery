@@ -32,6 +32,9 @@ header {
 header h1 { margin: 0 0 .25rem; font-size: 2rem; }
 header p { color: var(--muted); margin: 0; }
 
+.subtitle { margin-top: .35rem; font-size: .95rem; }
+.subtitle .count { color: var(--do-blue); font-weight: 600; }
+
 .uploader {
   display: flex;
   gap: .75rem;
@@ -95,7 +98,9 @@ button:hover { filter: brightness(1.05); }
   margin: 0;
 }
 
-.delete-btn {
+/* Shared style for the small circular controls on each gallery item
+   (copy, delete). Each control adds its own positioning and hover color. */
+.icon-btn {
   background: rgba(27, 31, 36, .65);
   color: #fff;
   border: 0;
@@ -110,11 +115,49 @@ button:hover { filter: brightness(1.05); }
   transition: opacity .15s ease, background .15s ease;
 }
 
-.gallery-item:hover .delete-btn,
-.delete-btn:focus { opacity: 1; }
-.delete-btn:hover { background: #d73a4a; }
+.gallery-item:hover .icon-btn,
+.icon-btn:focus {
+  opacity: 1;
+}
 
-.empty { text-align: center; color: var(--muted); margin: 2rem 0; }
+.delete-btn:hover {
+  background: #d73a4a;
+}
+
+/* Sits just left of the delete button in the top-right corner. */
+.copy-btn {
+  position: absolute;
+  top: .4rem;
+  right: 2.4rem;
+}
+
+.copy-btn:hover {
+  background: var(--do-blue);
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  margin: 3rem 0;
+  padding: 2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: .5rem;
+}
+
+.empty h2 {
+  margin: 0 0 .5rem;
+  color: var(--ink);
+}
+
+.empty p {
+  margin: 0;
+}
 
 .pager {
   display: flex;

@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spaces Gallery</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" type="image/svg+xml"
+      href="{{ url_for('static', filename='favicon.svg') }}">
 </head>
 <body>
   <header>
     <h1>🌊 Spaces Gallery</h1>
     <p class="tagline">Upload an image — it's stored in DigitalOcean Spaces…</p>
-    <p class="subtitle"><span style="color: #1E90FF">{{ pagination.total }}</span> image{{ 's' if pagination.total != 1 else '' }} uploaded.</p>
+    <p class="subtitle"><span class="count">{{ pagination.total }}</span> image{{ 's' if pagination.total != 1 else '' }} uploaded.</p>
   </header>
 
   <main>
@@ -38,10 +40,20 @@
             <a href="{{ image.url }}" target="_blank" rel="noopener">
               <img src="{{ image.thumb_url }}" alt="Uploaded image" loading="lazy" />
             </a>
+
+            <button
+              type="button"
+              class="icon-btn copy-btn"
+              data-url="{{ image.url }}"
+              aria-label="Copy image URL"
+              title="Copy URL">
+              📋
+            </button>
+
             <form class="delete-form" action="{{ url_for('delete') }}" method="post"
                   onsubmit="return confirm('Delete this image?');">
               <input type="hidden" name="key" value="{{ image.key }}" />
-              <button type="submit" class="delete-btn" aria-label="Delete image" title="Delete">✕</button>
+              <button type="submit" class="icon-btn delete-btn" aria-label="Delete image" title="Delete">✕</button>
             </form>
           </figure>
         {% endfor %}
@@ -63,12 +75,35 @@
         </nav>
       {% endif %}
     {% elif not error %}
-      <p class="empty">No images yet. Upload the first one!</p>
-    {% endif %}
+  <div class="empty">
+    <div class="empty-icon">📸</div>
+    <h2>No images yet</h2>
+    <p>Upload your first image to start building your gallery.</p>
+  </div>
+{% endif %}
   </main>
 
   <footer>
     <p>Deployed on DigitalOcean App Platform · <a href="https://github.com/oceanforge/spaces-gallery">Source on GitHub</a></p>
   </footer>
+
+  <script>
+    document.querySelectorAll(".copy-btn").forEach((button) => {
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(button.dataset.url);
+
+          const original = button.textContent;
+          button.textContent = "✓";
+
+          setTimeout(() => {
+            button.textContent = original;
+          }, 1000);
+        } catch (err) {
+          console.error("Failed to copy URL:", err);
+        }
+      });
+    });
+  </script>
 </body>
 </html>

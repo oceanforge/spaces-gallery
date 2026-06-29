@@ -7,7 +7,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
-- Display total image count on the index page using `pagination.total` ([#19])
+- Display total image count on the index page using `pagination.total` ([#19]).
+
+## [0.4.0] - 2026-06-29
+
+### Added
+- pytest test suite covering uploads, deletes, pagination, and the helper
+  functions, run in CI via a dependency-free in-memory S3 fake ([#23]).
+- Polished empty state (card layout) and a browser favicon ([#22]).
+- Copy-to-clipboard button on each gallery item for grabbing an image's public
+  URL ([#17]).
 
 ## [0.3.0] - 2026-06-21
 
@@ -41,7 +50,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Local development workflow via `.env` and `python app.py`.
 - CI workflow (lint) and release workflow (GitHub Releases on tags).
 
-[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.0...v0.1.1
@@ -51,4 +61,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 [#4]: https://github.com/oceanforge/spaces-gallery/issues/4
 [#5]: https://github.com/oceanforge/spaces-gallery/issues/5
 [#12]: https://github.com/oceanforge/spaces-gallery/issues/12
+[#17]: https://github.com/oceanforge/spaces-gallery/issues/17
 [#19]: https://github.com/oceanforge/spaces-gallery/issues/19
+[#22]: https://github.com/oceanforge/spaces-gallery/issues/22
+[#23]: https://github.com/oceanforge/spaces-gallery/issues/23
