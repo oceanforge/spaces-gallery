@@ -15,11 +15,24 @@ any size are welcome — fixing a typo counts.
    They run automatically on each commit; run them against everything with
    `pre-commit run --all-files`. CI runs the same checks, so this keeps you green.
 4. Create a branch: `git checkout -b my-change`.
-5. Make your change and test it locally.
+5. Make your change and test it locally, including `pytest` (see
+   [Running the tests](#running-the-tests)).
 6. Add a line under `## [Unreleased]` in [CHANGELOG.md](CHANGELOG.md) describing
    the change (see [Updating the changelog](#updating-the-changelog) below).
 7. Open a pull request describing what and why. The PR template includes a short
    checklist — the changelog entry is on it.
+
+## Running the tests
+
+Install the dev dependencies and run the suite:
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+The tests use a small in-memory fake for DigitalOcean Spaces, so they need no
+credentials or network access. CI runs `pytest` on every pull request.
 
 ## Guidelines
 
