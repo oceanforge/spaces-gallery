@@ -6,6 +6,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- Polished empty state (card layout) and a browser favicon ([#22]).
+- Copy-to-clipboard button on each gallery item for grabbing an image's public
+  URL ([#17]).
+
 ## [0.3.0] - 2026-06-21
 
 ### Added
@@ -48,3 +53,5 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 [#4]: https://github.com/oceanforge/spaces-gallery/issues/4
 [#5]: https://github.com/oceanforge/spaces-gallery/issues/5
 [#12]: https://github.com/oceanforge/spaces-gallery/issues/12
+[#17]: https://github.com/oceanforge/spaces-gallery/issues/17
+[#22]: https://github.com/oceanforge/spaces-gallery/issues/22
