@@ -7,6 +7,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- pytest test suite covering uploads, deletes, pagination, and the helper
+  functions, run in CI via a dependency-free in-memory S3 fake ([#23]).
 - Polished empty state (card layout) and a browser favicon ([#22]).
 - Copy-to-clipboard button on each gallery item for grabbing an image's public
   URL ([#17]).
@@ -55,3 +57,4 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 [#12]: https://github.com/oceanforge/spaces-gallery/issues/12
 [#17]: https://github.com/oceanforge/spaces-gallery/issues/17
 [#22]: https://github.com/oceanforge/spaces-gallery/issues/22
+[#23]: https://github.com/oceanforge/spaces-gallery/issues/23

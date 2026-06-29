@@ -96,6 +96,13 @@ pip install pre-commit
 pre-commit install
 ```
 
+It also has a small test suite (no credentials needed — Spaces is faked in-memory). Run it with:
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
 ## License
 
 [MIT](LICENSE)
