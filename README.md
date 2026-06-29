@@ -87,6 +87,8 @@ Prefer config-as-code? An app spec is included at [`.do/app.yaml`](.do/app.yaml)
 
 Issues and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Good first issues are labeled [`good first issue`](https://github.com/oceanforge/spaces-gallery/labels/good%20first%20issue).
 
+Opening a PR? Please add a line to the `[Unreleased]` section of [CHANGELOG.md](CHANGELOG.md) for any user-facing change — the [PR template](.github/PULL_REQUEST_TEMPLATE.md) has it on the checklist.
+
 This repo uses [pre-commit](https://pre-commit.com/) to run lint and formatting checks before each commit (the same checks CI enforces). Enable them once after cloning:
 
 ```bash
