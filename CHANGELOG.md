@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-06-29
+
 ### Added
 - pytest test suite covering uploads, deletes, pagination, and the helper
   functions, run in CI via a dependency-free in-memory S3 fake ([#23]).
@@ -45,7 +47,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Local development workflow via `.env` and `python app.py`.
 - CI workflow (lint) and release workflow (GitHub Releases on tags).
 
-[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.0...v0.1.1
