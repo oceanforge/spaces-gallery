@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spaces Gallery</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-  <link rel="icon" type="image/svg+xml"
-      href="{{ url_for('static', filename='favicon.svg') }}">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
 </head>
+
 <body>
   <header>
     <h1>🌊 Spaces Gallery</h1>
@@ -16,15 +17,15 @@
 
   <main>
     {% if error %}
-      <div class="notice">{{ error }}</div>
+    <div class="notice">{{ error }}</div>
     {% endif %}
 
     {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-          <div class="notice">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="notice">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
     {% endwith %}
 
     <form class="uploader" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
@@ -33,57 +34,57 @@
     </form>
 
     {% if images %}
-      <section class="gallery">
-        {% for image in images %}
-          <figure class="gallery-item">
-            <a href="{{ image.url }}" target="_blank" rel="noopener">
-              <img src="{{ image.thumb_url }}" alt="Uploaded image" loading="lazy" />
-            </a>
+    <section class="gallery">
+      {% for image in images %}
+      <figure class="gallery-item">
+        <a href="{{ image.url }}" target="_blank" rel="noopener">
+          <img src="{{ image.thumb_url }}" alt="Uploaded image" loading="lazy" />
+        </a>
+        <figcaption class="image-meta">
+          {{ image.size }} · Uploaded {{ image.last_modified }}
+        </figcaption>
 
-            <button
-              type="button"
-              class="icon-btn copy-btn"
-              data-url="{{ image.url }}"
-              aria-label="Copy image URL"
-              title="Copy URL">
-              📋
-            </button>
+        <button type="button" class="icon-btn copy-btn" data-url="{{ image.url }}" aria-label="Copy image URL"
+          title="Copy URL">
+          📋
+        </button>
 
-            <form class="delete-form" action="{{ url_for('delete') }}" method="post"
-                  onsubmit="return confirm('Delete this image?');">
-              <input type="hidden" name="key" value="{{ image.key }}" />
-              <button type="submit" class="icon-btn delete-btn" aria-label="Delete image" title="Delete">✕</button>
-            </form>
-          </figure>
-        {% endfor %}
-      </section>
+        <form class="delete-form" action="{{ url_for('delete') }}" method="post"
+          onsubmit="return confirm('Delete this image?');">
+          <input type="hidden" name="key" value="{{ image.key }}" />
+          <button type="submit" class="icon-btn delete-btn" aria-label="Delete image" title="Delete">✕</button>
+        </form>
+      </figure>
+      {% endfor %}
+    </section>
 
-      {% if pagination.total_pages > 1 %}
-        <nav class="pager">
-          {% if pagination.page > 1 %}
-            <a href="{{ url_for('index', page=pagination.page - 1) }}">← Newer</a>
-          {% else %}
-            <span class="disabled">← Newer</span>
-          {% endif %}
-          <span class="pager-status">Page {{ pagination.page }} of {{ pagination.total_pages }}</span>
-          {% if pagination.page < pagination.total_pages %}
-            <a href="{{ url_for('index', page=pagination.page + 1) }}">Older →</a>
-          {% else %}
-            <span class="disabled">Older →</span>
-          {% endif %}
-        </nav>
+    {% if pagination.total_pages > 1 %}
+    <nav class="pager">
+      {% if pagination.page > 1 %}
+      <a href="{{ url_for('index', page=pagination.page - 1) }}">← Newer</a>
+      {% else %}
+      <span class="disabled">← Newer</span>
       {% endif %}
+      <span class="pager-status">Page {{ pagination.page }} of {{ pagination.total_pages }}</span>
+      {% if pagination.page < pagination.total_pages %} <a href="{{ url_for('index', page=pagination.page + 1) }}">Older
+        →</a>
+        {% else %}
+        <span class="disabled">Older →</span>
+        {% endif %}
+    </nav>
+    {% endif %}
     {% elif not error %}
-  <div class="empty">
-    <div class="empty-icon">📸</div>
-    <h2>No images yet</h2>
-    <p>Upload your first image to start building your gallery.</p>
-  </div>
-{% endif %}
+    <div class="empty">
+      <div class="empty-icon">📸</div>
+      <h2>No images yet</h2>
+      <p>Upload your first image to start building your gallery.</p>
+    </div>
+    {% endif %}
   </main>
 
   <footer>
-    <p>Deployed on DigitalOcean App Platform · <a href="https://github.com/oceanforge/spaces-gallery">Source on GitHub</a></p>
+    <p>Deployed on DigitalOcean App Platform · <a href="https://github.com/oceanforge/spaces-gallery">Source on
+        GitHub</a></p>
   </footer>
 
   <script>
@@ -105,4 +106,5 @@
     });
   </script>
 </body>
+
 </html>
