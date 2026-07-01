@@ -84,6 +84,20 @@ def make_thumbnail(data):
     return buffer
 
 
+def format_size(size):
+    """Return a human-readable file size."""
+    if size < 1024:
+        return f"{size} B"
+    if size < 1024 * 1024:
+        return f"{size / 1024:.1f} KB"
+    return f"{size / (1024 * 1024):.1f} MB"
+
+
+def format_date(dt):
+    """Return a user-friendly upload date."""
+    return dt.strftime("%b %d, %Y")
+
+
 def list_images(page=1, page_size=PAGE_SIZE):
     """Return one page of images (newest first) plus paging metadata.
 
@@ -114,9 +128,18 @@ def list_images(page=1, page_size=PAGE_SIZE):
     for obj in page_objects:
         key = obj["Key"]
         name = key.split("/", 1)[1]
-        thumb_url = public_url(f"thumbs/{name}") if name in thumb_names else public_url(key)
-        images.append({"key": key, "url": public_url(key), "thumb_url": thumb_url})
-
+        thumb_url = (
+            public_url(f"thumbs/{name}")
+            if name in thumb_names
+            else public_url(key)
+        )
+        images.append({
+            "key": key,
+            "url": public_url(key),
+            "thumb_url": thumb_url,
+            "size": format_size(obj["Size"]),
+            "last_modified": format_date(obj["LastModified"]),
+        })
     pagination = {"page": page, "total_pages": total_pages, "total": total}
     return images, pagination
 

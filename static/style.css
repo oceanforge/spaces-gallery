@@ -159,6 +159,13 @@ button:hover { filter: brightness(1.05); }
   margin: 0;
 }
 
+.image-meta {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}
+
 .pager {
   display: flex;
   align-items: center;

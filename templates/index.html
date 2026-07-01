@@ -40,6 +40,9 @@
             <a href="{{ image.url }}" target="_blank" rel="noopener">
               <img src="{{ image.thumb_url }}" alt="Uploaded image" loading="lazy" />
             </a>
+            <figcaption class="image-meta">
+              {{ image.size }} · Uploaded {{ image.last_modified }}
+            </figcaption>
 
             <button
               type="button"
