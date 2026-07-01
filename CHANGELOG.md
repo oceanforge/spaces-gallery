@@ -14,6 +14,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Polished empty state (card layout) and a browser favicon ([#22]).
 - Copy-to-clipboard button on each gallery item for grabbing an image's public
   URL ([#17]).
+- Display image file size and upload date beneath gallery thumbnails.
 
 ## [0.3.0] - 2026-06-21
 
