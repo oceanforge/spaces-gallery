@@ -81,6 +81,7 @@ Prefer config-as-code? An app spec is included at [`.do/app.yaml`](.do/app.yaml)
 | `SPACES_ENDPOINT` | | `https://<region>.digitaloceanspaces.com` | Origin endpoint |
 | `SPACES_CDN_ENDPOINT` | | — | Optional CDN endpoint for faster delivery |
 | `SECRET_KEY` | | `dev-secret-key` | Flask session secret for flash messages; set a strong value in production |
+| `CACHE_MAX_AGE` | | `31536000` | `Cache-Control` max-age (seconds) set on uploads so the Spaces CDN caches them; default 1 year |
 | `PORT` | | `8080` | Port the app listens on |
 
 ## Contributing

@@ -47,7 +47,11 @@ class FakeS3Client:
 
     def put_object(self, Bucket, Key, Body, **kwargs):
         body = Body.read() if hasattr(Body, "read") else Body
-        self.store[Key] = {"body": body, "last_modified": self._tick()}
+        self.store[Key] = {
+            "body": body,
+            "last_modified": self._tick(),
+            "kwargs": kwargs,  # ACL, ContentType, CacheControl, ...
+        }
 
     def delete_object(self, Bucket, Key):
         self.store.pop(Key, None)

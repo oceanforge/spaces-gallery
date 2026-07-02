@@ -95,6 +95,19 @@ def test_upload_stores_original_and_thumbnail(client, fake_s3, png_bytes):
     assert f"thumbs/{upload_name}" in fake_s3.store
 
 
+def test_upload_sets_cache_control(client, fake_s3, png_bytes):
+    data = {"image": (io.BytesIO(png_bytes()), "pic.png")}
+    client.post(
+        "/upload", data=data, content_type="multipart/form-data", follow_redirects=True
+    )
+    # Both the original and its thumbnail are immutable, so they carry a
+    # long-lived Cache-Control header for the CDN.
+    for key, meta in fake_s3.store.items():
+        assert meta["kwargs"]["CacheControl"] == app_module.CACHE_CONTROL, key
+    assert "max-age=" in app_module.CACHE_CONTROL
+    assert "immutable" in app_module.CACHE_CONTROL
+
+
 def test_upload_rejects_oversized_file(client):
     client.application.config["MAX_CONTENT_LENGTH"] = 1000
     try:

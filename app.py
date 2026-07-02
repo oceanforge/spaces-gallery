@@ -36,6 +36,12 @@ MAX_CONTENT_LENGTH = 8 * 1024 * 1024  # 8 MB
 PAGE_SIZE = 12  # images per gallery page
 THUMBNAIL_SIZE = (400, 400)  # max thumbnail dimensions (aspect preserved)
 
+# Uploaded objects get unique UUID keys and are never overwritten, so they're
+# immutable and safe to cache for a long time. This tells the Spaces CDN (and
+# browsers) to hold onto them, which is both a perf win and a CDN showcase.
+CACHE_MAX_AGE = int(os.environ.get("CACHE_MAX_AGE", 31536000))  # seconds; 1 year
+CACHE_CONTROL = f"public, max-age={CACHE_MAX_AGE}, immutable"
+
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
 # Used to sign the session for flash messages. The fallback is for local dev only;
@@ -200,6 +206,7 @@ def upload():
         Body=data,
         ACL="public-read",
         ContentType=file.mimetype,
+        CacheControl=CACHE_CONTROL,
     )
 
     # Generate a thumbnail for the grid. If it fails for any reason, the gallery
@@ -212,6 +219,7 @@ def upload():
             Body=thumb,
             ACL="public-read",
             ContentType=file.mimetype,
+            CacheControl=CACHE_CONTROL,
         )
     except Exception:  # noqa: BLE001 — thumbnail is best-effort
         pass
