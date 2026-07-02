@@ -95,6 +95,28 @@ def test_upload_stores_original_and_thumbnail(client, fake_s3, png_bytes):
     assert f"thumbs/{upload_name}" in fake_s3.store
 
 
+def test_upload_sets_cache_control(client, fake_s3, png_bytes):
+    data = {"image": (io.BytesIO(png_bytes()), "pic.png")}
+    resp = client.post(
+        "/upload", data=data, content_type="multipart/form-data", follow_redirects=True
+    )
+    assert resp.status_code == 200
+    # The original and its thumbnail must both be written...
+    assert len(fake_s3.store) == 2
+    # ...and, being immutable, both carry the long-lived Cache-Control header.
+    for key, meta in fake_s3.store.items():
+        assert meta["kwargs"]["CacheControl"] == app_module.CACHE_CONTROL, key
+    assert "max-age=" in app_module.CACHE_CONTROL
+    assert "immutable" in app_module.CACHE_CONTROL
+
+
+def test_cache_max_age_ignores_invalid_env(monkeypatch):
+    monkeypatch.setenv("CACHE_MAX_AGE", "not-a-number")
+    assert app_module._int_env("CACHE_MAX_AGE", 31536000) == 31536000
+    monkeypatch.setenv("CACHE_MAX_AGE", "-5")
+    assert app_module._int_env("CACHE_MAX_AGE", 31536000) == 0
+
+
 def test_upload_rejects_oversized_file(client):
     client.application.config["MAX_CONTENT_LENGTH"] = 1000
     try:

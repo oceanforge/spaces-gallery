@@ -7,6 +7,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- Set a long-lived, immutable `Cache-Control` header on uploaded images (and
+  thumbnails) so the Spaces CDN and browsers cache them; max-age is configurable
+  via `CACHE_MAX_AGE` ([#31]).
 - Drag-and-drop image uploads: drop an image onto the upload card to upload it,
   with the file picker kept as an accessible fallback ([#18]).
 - Display total image count on the index page using `pagination.total` ([#19]).
@@ -69,3 +72,4 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 [#19]: https://github.com/oceanforge/spaces-gallery/issues/19
 [#22]: https://github.com/oceanforge/spaces-gallery/issues/22
 [#23]: https://github.com/oceanforge/spaces-gallery/issues/23
+[#31]: https://github.com/oceanforge/spaces-gallery/issues/31
