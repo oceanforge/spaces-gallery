@@ -7,6 +7,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- Drag-and-drop image uploads: drop an image onto the upload card to upload it,
+  with the file picker kept as an accessible fallback ([#18]).
 - Display total image count on the index page using `pagination.total` ([#19]).
 
 ## [0.4.0] - 2026-06-29
@@ -63,6 +65,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 [#5]: https://github.com/oceanforge/spaces-gallery/issues/5
 [#12]: https://github.com/oceanforge/spaces-gallery/issues/12
 [#17]: https://github.com/oceanforge/spaces-gallery/issues/17
+[#18]: https://github.com/oceanforge/spaces-gallery/issues/18
 [#19]: https://github.com/oceanforge/spaces-gallery/issues/19
 [#22]: https://github.com/oceanforge/spaces-gallery/issues/22
 [#23]: https://github.com/oceanforge/spaces-gallery/issues/23
