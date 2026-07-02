@@ -31,6 +31,7 @@
     <form class="uploader" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
       <input type="file" name="image" accept="image/*" required />
       <button type="submit">Upload</button>
+      <p class="drop-hint" role="status" aria-live="polite">Drag &amp; drop an image here, or use the file picker.</p>
     </form>
 
     {% if images %}
@@ -107,6 +108,59 @@
         }
       });
     });
+
+    const uploader = document.querySelector(".uploader");
+    if (uploader) {
+      const input = uploader.querySelector("input[type=file]");
+      const hint = uploader.querySelector(".drop-hint");
+      let depth = 0; // count nested dragenter/leave so the highlight doesn't flicker
+
+      // Stop a file dropped outside the zone from navigating the page away.
+      ["dragover", "drop"].forEach((name) => {
+        document.addEventListener(name, (event) => event.preventDefault());
+      });
+
+      uploader.addEventListener("dragenter", (event) => {
+        event.preventDefault();
+        depth += 1;
+        uploader.classList.add("dragover");
+      });
+
+      uploader.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "copy";
+      });
+
+      uploader.addEventListener("dragleave", () => {
+        depth -= 1;
+        if (depth <= 0) {
+          depth = 0;
+          uploader.classList.remove("dragover");
+        }
+      });
+
+      uploader.addEventListener("drop", (event) => {
+        event.preventDefault();
+        depth = 0;
+        uploader.classList.remove("dragover");
+
+        const file = event.dataTransfer.files[0]; // first file only
+        if (!file) return; // ignore text/URL drags that carry no file
+
+        const data = new DataTransfer();
+        data.items.add(file);
+        input.files = data.files; // hand the file to the real input
+
+        hint.textContent = `Uploading ${file.name}…`;
+        uploader.requestSubmit(); // runs native validation, then submits
+      });
+
+      uploader.addEventListener("submit", () => {
+        const button = uploader.querySelector("button[type=submit]");
+        button.disabled = true;
+        button.textContent = "Uploading…";
+      });
+    }
   </script>
 </body>
 </html>
