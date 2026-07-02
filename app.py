@@ -39,7 +39,15 @@ THUMBNAIL_SIZE = (400, 400)  # max thumbnail dimensions (aspect preserved)
 # Uploaded objects get unique UUID keys and are never overwritten, so they're
 # immutable and safe to cache for a long time. This tells the Spaces CDN (and
 # browsers) to hold onto them, which is both a perf win and a CDN showcase.
-CACHE_MAX_AGE = int(os.environ.get("CACHE_MAX_AGE", 31536000))  # seconds; 1 year
+def _int_env(name, default):
+    """Read a non-negative int from the environment, ignoring invalid values."""
+    try:
+        return max(0, int(os.environ.get(name, default)))
+    except (TypeError, ValueError):
+        return default
+
+
+CACHE_MAX_AGE = _int_env("CACHE_MAX_AGE", 31536000)  # seconds; default 1 year
 CACHE_CONTROL = f"public, max-age={CACHE_MAX_AGE}, immutable"
 
 app = Flask(__name__)
