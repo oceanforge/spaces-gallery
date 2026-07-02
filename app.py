@@ -207,6 +207,16 @@ def upload():
     key = f"uploads/{name}"
 
     data = file.read()
+
+    # A matching extension isn't proof the bytes are an image, so confirm the
+    # file actually decodes. verify() consumes the image object, so make_thumbnail
+    # re-opens the bytes from `data` afterwards.
+    try:
+        Image.open(io.BytesIO(data)).verify()
+    except Exception:  # noqa: BLE001 — any decode error means it isn't an image
+        flash("That file isn't a valid image. Allowed types: png, jpg, jpeg, gif, webp.")
+        return redirect(url_for("index"))
+
     client = get_client()
     client.put_object(
         Bucket=SPACES_BUCKET,
