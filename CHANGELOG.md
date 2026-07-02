@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-02
+
 ### Added
 - Reject uploads that aren't decodable images, even if they have an image
   extension (verified with Pillow) ([#43]).
@@ -14,6 +16,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   via `CACHE_MAX_AGE` ([#31]).
 - Drag-and-drop image uploads: drop an image onto the upload card to upload it,
   with the file picker kept as an accessible fallback ([#18]).
+- Display image file size and upload date beneath gallery thumbnails ([#29]).
 - Display total image count on the index page using `pagination.total` ([#19]).
 
 ## [0.4.0] - 2026-06-29
@@ -24,7 +27,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Polished empty state (card layout) and a browser favicon ([#22]).
 - Copy-to-clipboard button on each gallery item for grabbing an image's public
   URL ([#17]).
-- Display image file size and upload date beneath gallery thumbnails.
 
 ## [0.3.0] - 2026-06-21
 
@@ -58,7 +60,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Local development workflow via `.env` and `python app.py`.
 - CI workflow (lint) and release workflow (GitHub Releases on tags).
 
-[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/oceanforge/spaces-gallery/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/oceanforge/spaces-gallery/compare/v0.1.1...v0.2.0
@@ -74,5 +77,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 [#19]: https://github.com/oceanforge/spaces-gallery/issues/19
 [#22]: https://github.com/oceanforge/spaces-gallery/issues/22
 [#23]: https://github.com/oceanforge/spaces-gallery/issues/23
+[#29]: https://github.com/oceanforge/spaces-gallery/issues/29
 [#31]: https://github.com/oceanforge/spaces-gallery/issues/31
 [#43]: https://github.com/oceanforge/spaces-gallery/issues/43
