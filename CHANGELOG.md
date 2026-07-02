@@ -7,6 +7,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- Reject uploads that aren't decodable images, even if they have an image
+  extension (verified with Pillow) ([#43]).
 - Set a long-lived, immutable `Cache-Control` header on uploaded images (and
   thumbnails) so the Spaces CDN and browsers cache them; max-age is configurable
   via `CACHE_MAX_AGE` ([#31]).
@@ -73,3 +75,4 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 [#22]: https://github.com/oceanforge/spaces-gallery/issues/22
 [#23]: https://github.com/oceanforge/spaces-gallery/issues/23
 [#31]: https://github.com/oceanforge/spaces-gallery/issues/31
+[#43]: https://github.com/oceanforge/spaces-gallery/issues/43

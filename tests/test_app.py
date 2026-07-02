@@ -81,6 +81,18 @@ def test_upload_rejects_wrong_type(client):
     assert b"Invalid file type" in resp.data
 
 
+def test_upload_rejects_non_image_with_image_extension(client, fake_s3):
+    # A non-image payload disguised with a .png extension must be rejected and
+    # never stored, even though the extension check passes.
+    data = {"image": (io.BytesIO(b"definitely not a PNG"), "fake.png")}
+    resp = client.post(
+        "/upload", data=data, content_type="multipart/form-data", follow_redirects=True
+    )
+    assert resp.status_code == 200
+    assert b"valid image" in resp.data
+    assert len(fake_s3.store) == 0
+
+
 def test_upload_stores_original_and_thumbnail(client, fake_s3, png_bytes):
     data = {"image": (io.BytesIO(png_bytes()), "pic.png")}
     resp = client.post(
