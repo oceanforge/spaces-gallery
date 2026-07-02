@@ -115,9 +115,14 @@
       const hint = uploader.querySelector(".drop-hint");
       let depth = 0; // count nested dragenter/leave so the highlight doesn't flicker
 
-      // Stop a file dropped outside the zone from navigating the page away.
+      // Stop a *file* dropped outside the zone from navigating the page away,
+      // while leaving other drags (text, links) alone.
+      const isFileDrag = (event) =>
+        event.dataTransfer && Array.from(event.dataTransfer.types).includes("Files");
       ["dragover", "drop"].forEach((name) => {
-        document.addEventListener(name, (event) => event.preventDefault());
+        document.addEventListener(name, (event) => {
+          if (isFileDrag(event)) event.preventDefault();
+        });
       });
 
       uploader.addEventListener("dragenter", (event) => {
@@ -152,7 +157,13 @@
         input.files = data.files; // hand the file to the real input
 
         hint.textContent = `Uploading ${file.name}…`;
-        uploader.requestSubmit(); // runs native validation, then submits
+        // requestSubmit() runs native validation; fall back to clicking the
+        // submit button on older browsers (Safari < 16) that lack it.
+        if (typeof uploader.requestSubmit === "function") {
+          uploader.requestSubmit();
+        } else {
+          uploader.querySelector("button[type=submit]").click();
+        }
       });
 
       uploader.addEventListener("submit", () => {
