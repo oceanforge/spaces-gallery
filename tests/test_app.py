@@ -185,3 +185,52 @@ def test_pagination_splits_and_clamps(client, fake_s3, png_bytes):
     assert pag_high["page"] == 2
     _, pag_low = app_module.list_images(page=0)
     assert pag_low["page"] == 1
+
+
+# --- Direct uploads ----------------------------------------------------------
+
+
+@pytest.fixture
+def direct(client, monkeypatch):
+    monkeypatch.setattr(app_module, "DIRECT_UPLOADS", True)
+    return client
+
+
+def test_presign_is_off_by_default(client):
+    assert client.post("/upload/presign", json={"filename": "a.png"}).status_code == 404
+
+
+def test_presign_pins_type_and_size(direct, fake_s3):
+    resp = direct.post("/upload/presign", json={"filename": "Cat.PNG"})
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["key"].startswith("uploads/") and body["key"].endswith(".png")
+    conditions = fake_s3.presigned["Conditions"]
+    assert {"Content-Type": "image/png"} in conditions
+    assert ["content-length-range", 1, app_module.MAX_CONTENT_LENGTH] in conditions
+    assert body["fields"]["Content-Type"] == "image/png"
+
+
+def test_presign_rejects_other_types(direct):
+    assert direct.post("/upload/presign", json={"filename": "notes.txt"}).status_code == 400
+
+
+def test_complete_makes_thumbnail(direct, fake_s3, png_bytes):
+    fake_s3.put_object(Bucket="b", Key="uploads/abc.png", Body=png_bytes(size=(800, 600)))
+    resp = direct.post("/upload/complete", json={"key": "uploads/abc.png"})
+    assert resp.status_code == 200
+    assert "thumbs/abc.png" in fake_s3.store
+    # The POST can't set Cache-Control, so complete adds it to the original.
+    assert fake_s3.store["uploads/abc.png"]["kwargs"]["CacheControl"] == app_module.CACHE_CONTROL
+
+
+def test_complete_removes_files_that_are_not_images(direct, fake_s3):
+    fake_s3.put_object(Bucket="b", Key="uploads/bad.png", Body=b"not an image")
+    resp = direct.post("/upload/complete", json={"key": "uploads/bad.png"})
+    assert resp.status_code == 400
+    assert "uploads/bad.png" not in fake_s3.store
+
+
+def test_complete_only_accepts_upload_keys(direct, fake_s3, png_bytes):
+    fake_s3.put_object(Bucket="b", Key="thumbs/x.png", Body=png_bytes())
+    assert direct.post("/upload/complete", json={"key": "thumbs/x.png"}).status_code == 400

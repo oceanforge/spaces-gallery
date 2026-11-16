@@ -82,7 +82,23 @@ Prefer config-as-code? An app spec is included at [`.do/app.yaml`](.do/app.yaml)
 | `SPACES_CDN_ENDPOINT` | | — | Optional CDN endpoint for faster delivery |
 | `SECRET_KEY` | | `dev-secret-key` | Flask session secret for flash messages; set a strong value in production |
 | `CACHE_MAX_AGE` | | `31536000` | `Cache-Control` max-age (seconds) set on uploads so the Spaces CDN caches them; default 1 year |
+| `DIRECT_UPLOADS` | | off | Set to `1` to have browsers upload straight to Spaces with a presigned POST instead of through the app. Needs the CORS rule below. |
 | `PORT` | | `8080` | Port the app listens on |
+
+### Direct uploads
+
+With `DIRECT_UPLOADS=1`, the page asks the app for a presigned POST, sends the file
+straight to Spaces, then calls the app once more to check the image, make the
+thumbnail and set the cache header. The bucket has to allow your app's origin to
+POST to it, for example with boto3:
+
+```python
+client.put_bucket_cors(Bucket="your-bucket", CORSConfiguration={"CORSRules": [{
+    "AllowedOrigins": ["https://your-app.ondigitalocean.app"],
+    "AllowedMethods": ["POST"],
+    "AllowedHeaders": ["*"],
+}]})
+```
 
 ## Contributing
 

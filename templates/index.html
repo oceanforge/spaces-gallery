@@ -28,7 +28,7 @@
       {% endif %}
     {% endwith %}
 
-    <form class="uploader" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+    <form class="uploader" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data"{% if direct_uploads %} data-direct="1"{% endif %}>
       <input type="file" name="image" accept="image/*" required />
       <button type="submit">Upload</button>
       <p class="drop-hint" role="status" aria-live="polite">Drag &amp; drop an image here, or use the file picker.</p>
@@ -166,11 +166,52 @@
         }
       });
 
-      uploader.addEventListener("submit", () => {
+      uploader.addEventListener("submit", (event) => {
         const button = uploader.querySelector("button[type=submit]");
         button.disabled = true;
         button.textContent = "Uploading…";
+        if (uploader.dataset.direct === "1" && input.files.length) {
+          event.preventDefault();
+          directUpload(input.files[0]).then(
+            () => window.location.reload(),
+            (err) => {
+              hint.textContent = err.message;
+              button.disabled = false;
+              button.textContent = "Upload";
+            }
+          );
+        }
       });
+
+      // Direct upload: ask the app for a presigned POST, send the file straight
+      // to Spaces, then let the app check it and make the thumbnail.
+      async function directUpload(file) {
+        const post = (url, body) =>
+          fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+        const presigned = await post("{{ url_for('presign_upload') }}", { filename: file.name });
+        const grant = await presigned.json();
+        if (!presigned.ok) throw new Error(grant.error || "Upload failed.");
+
+        const form = new FormData();
+        Object.entries(grant.fields).forEach(([name, value]) => form.append(name, value));
+        form.append("file", file); // must be the last field
+        // A missing CORS rule makes fetch throw even when Spaces stored the file,
+        // so a network error still goes on to the check below, which knows.
+        let sent = null;
+        try {
+          sent = await fetch(grant.url, { method: "POST", body: form });
+        } catch (err) {
+          sent = null;
+        }
+        if (sent && !sent.ok) throw new Error("Spaces rejected the upload (too large or not allowed).");
+
+        const done = await post("{{ url_for('complete_upload') }}", { key: grant.key });
+        if (!done.ok) throw new Error((await done.json()).error || "Upload failed.");
+      }
     }
   </script>
 </body>

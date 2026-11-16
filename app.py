@@ -50,6 +50,19 @@ def _int_env(name, default):
 CACHE_MAX_AGE = _int_env("CACHE_MAX_AGE", 31536000)  # seconds; default 1 year
 CACHE_CONTROL = f"public, max-age={CACHE_MAX_AGE}, immutable"
 
+# Direct uploads: the browser sends the file straight to Spaces with a presigned
+# POST, so the bytes never pass through this app. Off by default because the
+# bucket needs a CORS rule first (see README).
+DIRECT_UPLOADS = os.environ.get("DIRECT_UPLOADS", "").lower() in {"1", "true", "yes"}
+PRESIGN_EXPIRES = 300  # seconds a presigned upload stays valid
+CONTENT_TYPES = {
+    "png": "image/png",
+    "jpg": "image/jpeg",
+    "jpeg": "image/jpeg",
+    "gif": "image/gif",
+    "webp": "image/webp",
+}
+
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
 # Used to sign the session for flash messages. The fallback is for local dev only;
@@ -181,6 +194,7 @@ def index():
         images=images,
         error=error,
         pagination=pagination,
+        direct_uploads=DIRECT_UPLOADS,
     )
 
 
@@ -243,6 +257,92 @@ def upload():
         pass
 
     return redirect(url_for("index"))
+
+
+@app.route("/upload/presign", methods=["POST"])
+def presign_upload():
+    """Hand the browser a presigned POST for one image.
+
+    The policy pins the key, the content type and the ACL, and caps the size, so
+    Spaces itself rejects anything the app wouldn't accept. Cache-Control is not
+    in it: Spaces checks a Cache-Control condition but doesn't store the header
+    from a POST upload, so complete_upload sets it afterwards.
+    """
+    if not DIRECT_UPLOADS or not is_configured():
+        return {"error": "Direct uploads are not enabled."}, 404
+
+    filename = (request.get_json(silent=True) or {}).get("filename", "")
+    if not allowed_file(filename):
+        return {"error": "Invalid file type. Allowed types: png, jpg, jpeg, gif, webp."}, 400
+
+    ext = filename.rsplit(".", 1)[1].lower()
+    key = f"uploads/{uuid.uuid4().hex}.{ext}"
+    content_type = CONTENT_TYPES[ext]
+    fields = {"acl": "public-read", "Content-Type": content_type}
+    post = get_client().generate_presigned_post(
+        Bucket=SPACES_BUCKET,
+        Key=key,
+        Fields=fields,
+        Conditions=[
+            {"acl": "public-read"},
+            {"Content-Type": content_type},
+            ["content-length-range", 1, MAX_CONTENT_LENGTH],
+        ],
+        ExpiresIn=PRESIGN_EXPIRES,
+    )
+    return {"key": key, "url": post["url"], "fields": post["fields"]}
+
+
+@app.route("/upload/complete", methods=["POST"])
+def complete_upload():
+    """Check a directly uploaded file and make its thumbnail.
+
+    The presigned policy can't look inside the file, so this is where a file that
+    isn't really an image gets removed again.
+    """
+    if not DIRECT_UPLOADS or not is_configured():
+        return {"error": "Direct uploads are not enabled."}, 404
+
+    key = (request.get_json(silent=True) or {}).get("key", "")
+    if not key.startswith("uploads/") or "/" in key.split("/", 1)[1]:
+        return {"error": "Unknown upload."}, 400
+
+    client = get_client()
+    try:
+        data = client.get_object(Bucket=SPACES_BUCKET, Key=key)["Body"].read()
+    except Exception:  # noqa: BLE001 — missing or unreadable object
+        return {"error": "Upload not found."}, 404
+
+    try:
+        Image.open(io.BytesIO(data)).verify()
+    except Exception:  # noqa: BLE001 — any decode error means it isn't an image
+        client.delete_object(Bucket=SPACES_BUCKET, Key=key)
+        return {"error": "That file isn't a valid image."}, 400
+
+    name = key.split("/", 1)[1]
+    content_type = CONTENT_TYPES[name.rsplit(".", 1)[1]]
+    # Copy the object onto itself to add the cache header the POST couldn't set.
+    client.copy_object(
+        Bucket=SPACES_BUCKET,
+        Key=key,
+        CopySource={"Bucket": SPACES_BUCKET, "Key": key},
+        MetadataDirective="REPLACE",
+        ACL="public-read",
+        ContentType=content_type,
+        CacheControl=CACHE_CONTROL,
+    )
+    try:
+        client.put_object(
+            Bucket=SPACES_BUCKET,
+            Key=f"thumbs/{name}",
+            Body=make_thumbnail(data),
+            ACL="public-read",
+            ContentType=content_type,
+            CacheControl=CACHE_CONTROL,
+        )
+    except Exception:  # noqa: BLE001 — thumbnail is best-effort
+        pass
+    return {"key": key, "url": public_url(key)}
 
 
 @app.route("/delete", methods=["POST"])
