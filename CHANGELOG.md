@@ -6,6 +6,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- Optional direct uploads (`DIRECT_UPLOADS=1`): the browser sends the file straight
+  to Spaces with a presigned POST that pins the type and caps the size, and the app
+  then checks the image, makes the thumbnail and sets `Cache-Control` (Spaces doesn't
+  store that header from a POST upload).
+
 ## [0.5.0] - 2026-07-02
 
 ### Added

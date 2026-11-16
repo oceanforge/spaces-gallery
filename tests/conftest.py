@@ -53,6 +53,18 @@ class FakeS3Client:
             "kwargs": kwargs,  # ACL, ContentType, CacheControl, ...
         }
 
+    def get_object(self, Bucket, Key):
+        if Key not in self.store:
+            raise KeyError(Key)
+        return {"Body": io.BytesIO(self.store[Key]["body"])}
+
+    def copy_object(self, Bucket, Key, CopySource, **kwargs):
+        self.store[Key] = {**self.store[CopySource["Key"]], "kwargs": kwargs}
+
+    def generate_presigned_post(self, Bucket, Key, Fields, Conditions, ExpiresIn):
+        self.presigned = {"Key": Key, "Fields": Fields, "Conditions": Conditions}
+        return {"url": f"https://{Bucket}.example", "fields": {**Fields, "key": Key, "policy": "p"}}
+
     def delete_object(self, Bucket, Key):
         self.store.pop(Key, None)
 
